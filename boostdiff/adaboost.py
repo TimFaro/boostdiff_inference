@@ -172,6 +172,8 @@ class AdaBoostDiffRegressor():
         y_control = output_control[bootstrap_idx_con]
         
         # Fit a differential tree
+        X_dis = np.array(X_dis, dtype=np.double)
+        X_con = np.array(X_con, dtype=np.double)
         estimator.build(X_dis, X_con, y_disease, y_control, iboost)
         
         if self.variable_importance == "disease_importance":
@@ -179,8 +181,9 @@ class AdaBoostDiffRegressor():
 
         elif self.variable_importance == "differential_improvement":
             self.feature_importances[iboost, :] = estimator.get_variable_importance_differential_improvement()
-
-        y_predict = estimator.predict(X_disease.values).flatten()
+        
+        X_dis_vals_double = np.array(X_disease.values, dtype=np.double)
+        y_predict = estimator.predict(X_dis_vals_double).flatten()
 
         error_vect = np.absolute(y_predict - output_disease)
 
@@ -225,9 +228,12 @@ class AdaBoostDiffRegressor():
 
         self.estimators_.append(estimator)
         self.estimator_count +=1        
+
+        X_dis_vals_double = np.array(X_disease.values, dtype=np.double)
+        X_contr_vals_double = np.array(X_control.values, dtype=np.double)
         
-        y_predict_append = self.predict(X_disease.values).flatten()
-        y_predict_append_con = self.predict(X_control.values).flatten()
+        y_predict_append = self.predict(X_dis_vals_double).flatten()
+        y_predict_append_con = self.predict(X_contr_vals_double).flatten()
             
         error_mean_append = np.absolute(y_predict_append - output_disease)
         error_mean_append_con = np.absolute(y_predict_append_con - output_control)

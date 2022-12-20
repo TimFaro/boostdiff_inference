@@ -1,3 +1,5 @@
+This is an adaptation of the tool BoostDiff (explained below), allowing the use of microbiome data. 
+
 # BoostDiff 
 BoostDiff (Boosted Differential Trees) - Tree-based Inference of Differential Networks from Gene Expression Data
 

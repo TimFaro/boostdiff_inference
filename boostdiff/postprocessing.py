@@ -5,6 +5,7 @@ import numpy as np
 import os
 import glob
 import networkx as nx
+from networkx.drawing.nx_agraph import graphviz_layout
 
 
 def plot_histogram(file_diff, file_output=""):
@@ -112,7 +113,8 @@ def colorize_by_condition(df_dis, df_con):
     # Find and mark conflicting edges (should be colored gray)
     df_conflict = pd.merge(df_dis, df_con, how='inner', on=['target', 'regulator'])
     df_conflict = df_conflict[['target','regulator']]
-    df_conflict.loc[:, "condition"] = "both"
+    if len(df_conflict > 0):
+      df_conflict.loc[:, "condition"] = "both"
     print("No. of conflicting edges:", df_conflict.shape[0])
 
     df_final = pd.concat([df_both, df_conflict])
@@ -193,5 +195,5 @@ def plot_grn(df_preprocessed, layout="graphviz_layout", show_conflicting=True,
                   fontsize=14)
 
     if filename:
-        plt.savefig(filename, bbox_inches="tight", format="png")
+        plt.savefig(filename, bbox_inches="tight", format="pdf")
     plt.show()
